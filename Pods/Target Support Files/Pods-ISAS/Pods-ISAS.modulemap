@@ -1,0 +1,6 @@
+framework module Pods_ISAS {
+  umbrella header "Pods-ISAS-umbrella.h"
+
+  export *
+  module * { export * }
+}
