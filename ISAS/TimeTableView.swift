@@ -64,7 +64,8 @@ class TimeTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let grade = self.fetchController.objectAtIndexPath(indexPath) as! Grade
         let cell = tableView.dequeueReusableCellWithIdentifier("ProtoCell") as! PrototypeCell
-        cell.setCell(grade: grade)
+        cell.backgroundColor = UIColor.clearColor()
+        cell.setCell(grade: grade, withSubject: true)
         return cell
     }
 

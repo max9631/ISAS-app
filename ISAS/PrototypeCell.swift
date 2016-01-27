@@ -37,11 +37,14 @@ class PrototypeCell: UITableViewCell {
      - Parameter grade: Grade object representing a single grade.
     */
     
-    func setCell(grade grade:Grade){
+    func setCell(grade grade:Grade, withSubject showSubject:Bool){
         let formatter = NSDateFormatter()
         formatter.dateFormat = "d.M."
-        print(grade)
-        self.dateLabel.text = "\(formatter.stringFromDate(grade.date!)) \(grade.subject!)"
+        if showSubject{
+            self.dateLabel.text = "\(formatter.stringFromDate(grade.date!)) \(grade.subject!)"
+        }else{
+            self.dateLabel.text = "\(formatter.stringFromDate(grade.date!))"
+        }
         self.mainLabel.text = grade.examLabel!
         self.detailedLabel.text = grade.typeOfExam
         self.gradeLabel.text = "\(grade.grade!)"

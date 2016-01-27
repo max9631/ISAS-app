@@ -8,6 +8,8 @@
 
 import UIKit
 
+let useSchoolServer = true
+
 class SyncEngine: NSObject{
     
     /**
@@ -31,7 +33,11 @@ class SyncEngine: NSObject{
     
     class func logIn(username username:String, password:String) throws -> NSData{
         var url:NSURL
-        url = NSURL(string: "https://isas.sspbrno.cz/prihlasit.php")!
+        if useSchoolServer{
+            url = NSURL(string: "https://isas.sspbrno.cz/prihlasit.php")!
+        }else{
+            url = NSURL(string: "http://90.178.17.71/school/isas/prihlasit.php")!
+        }
         let session = NSURLSession.sharedSession()
         let request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = "POST"
@@ -47,7 +53,6 @@ class SyncEngine: NSObject{
                 dispatch_semaphore_signal(semaphore)
                 return
             }
-            print(netData)
             data = netData
             dispatch_semaphore_signal(semaphore)
         });
@@ -80,7 +85,11 @@ class SyncEngine: NSObject{
     
     class func getGrades() throws -> NSData{
         var url:NSURL
-        url = NSURL(string: "https://isas.sspbrno.cz/prubezna-klasifikace.php")!
+        if useSchoolServer{
+            url = NSURL(string: "https://isas.sspbrno.cz/prubezna-klasifikace.php")!
+        }else{
+            url = NSURL(string: "http://90.178.17.71/school/isas/prubezna-klasifikace.php")!
+        }
         let session = NSURLSession.sharedSession()
         let request = NSMutableURLRequest(URL: url)
         var error: SyncError?
@@ -94,7 +103,6 @@ class SyncEngine: NSObject{
                 return
             }
             data = netData
-            print(netData)
             dispatch_semaphore_signal(semaphore)
             
         });

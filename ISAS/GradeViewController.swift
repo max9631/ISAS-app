@@ -25,12 +25,15 @@ class GradeViewController: UIViewController {
         super.viewDidLoad()
         let user = Database.getUser()!
         self.nameLabel.text = user.name!
+        self.nameLabel.adjustsFontSizeToFitWidth = true
         self.indicator.alpha = 0
-        self.tableWidthConstrain.constant = UIScreen.mainScreen().bounds.width
         self.gesture = GestureDelegate(screen: self, movableConstrain: self.TableYOrigin)
         let panGesture = UIPanGestureRecognizer(target: self.gesture, action: "panGesture:")
         panGesture.delegate = self.gesture
         self.view.addGestureRecognizer(panGesture)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         if self.shouldRefresh{
             self.refresh()
         }
@@ -38,6 +41,24 @@ class GradeViewController: UIViewController {
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return false
+    }
+    
+    override func viewWillLayoutSubviews() {
+        if self.gesture.xOrientation == nil{// to find whether it is the gesture who is calling this method
+            if self.traitCollection.horizontalSizeClass == .Compact{
+                self.tableWidthConstrain.constant = self.view.frame.width
+                self.gesture.activated = true
+            }else if self.traitCollection.horizontalSizeClass == .Regular{
+                self.tableWidthConstrain.constant = self.view.frame.width / 2
+                self.gesture.activated = false
+            }
+            NSNotificationCenter.defaultCenter().postNotificationName("ResizeHeaderView", object: self.tableWidthConstrain.constant)
+            self.TableYOrigin.constant = -20
+        }
     }
     
     /**

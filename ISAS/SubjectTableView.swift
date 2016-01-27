@@ -63,13 +63,13 @@ class SubjectTableView: UITableView, UITableViewDelegate, UITableViewDataSource 
      */
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = HeaderView()
+        let header = HeaderView(withWidth: tableView.frame.width)
         var sum = 0 as Float
         var num = 0
         for grade in self.fetchController.sections![section].objects as! [Grade]{
             if grade.gradeValue != 0{
-                sum = sum + (grade.gradeValue as! Float)
-                num++
+                sum = sum + ((grade.gradeValue as! Float)*Float(grade.weight as! Int))
+                num = num + (grade.weight as! Int)
             }
         }
         header.setAverage(sum/Float(num))
@@ -103,12 +103,8 @@ class SubjectTableView: UITableView, UITableViewDelegate, UITableViewDataSource 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let grade = self.fetchController.objectAtIndexPath(indexPath) as! Grade
         let cell = tableView.dequeueReusableCellWithIdentifier("ProtoCell") as! PrototypeCell
-        let formatter = NSDateFormatter()
-        formatter.dateFormat = "d.M."
-        cell.dateLabel.text = "\(formatter.stringFromDate(grade.date!))"
-        cell.mainLabel.text = grade.examLabel!
-        cell.detailedLabel.text = grade.typeOfExam
-        cell.gradeLabel.text = "\(grade.grade!)"
+        cell.backgroundColor = UIColor.clearColor()
+        cell.setCell(grade: grade, withSubject: false)
         return cell
     }
     

@@ -148,9 +148,35 @@ class Database: NSObject {
         var deleteWebIndexes = [] as [Int]
         var grades = self.getGrades()
         for var i = 0; i < webGrades.count; i = i+1{
-            let dicID = webGrades[i]["ID"] as! Int
+            let webDate = webGrades[i]["Datum"] as! NSDate
+            let webSubject = webGrades[i]["Předmět"] as! String
+            let webGrade = webGrades[i]["Známka"] as! String
+            let webGradeValue = webGrades[i]["Hodnota"] as! Float
+            let webType = webGrades[i]["Typ zkoušení"] as! String
+            let webWeight = webGrades[i]["Váha"] as! Int
+            let webNote = webGrades[i]["Poznámka"] as! String
+            let webTech = webGrades[i]["Učitel"] as! String
             for var s = 0; s < grades.count; s = s+1{
-                if dicID == grades[s].id as! Int{
+                let local = grades[s]
+                var same = true
+                if !webDate.isEqualToDate(local.date!){
+                    same = false
+                }else if webSubject != local.subject!{
+                    same = false
+                }else if webGrade != local.grade{
+                    same = false
+                }else if webGradeValue != local.gradeValue{
+                    same = false
+                }else if webType != local.typeOfExam{
+                    same = false
+                }else if webWeight != local.weight{
+                    same = false
+                }else if webNote != local.examLabel{
+                    same = false
+                }else if webTech != local.teacher{
+                    same = false
+                }
+                if same{
                     deleteIndexes.append(s)
                     deleteWebIndexes.append(i)
                     break

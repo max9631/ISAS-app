@@ -15,10 +15,15 @@ class GestureDelegate: NSObject, UIGestureRecognizerDelegate {
     var const:NSLayoutConstraint!
     var timeSelected:Bool!
     var xOrientation:Bool?
+    var activated = true
     
     init(screen:GradeViewController, movableConstrain:NSLayoutConstraint){
         self.mainView = screen.view
         self.const = movableConstrain
+    }
+    
+    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.activated
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -41,7 +46,7 @@ class GestureDelegate: NSObject, UIGestureRecognizerDelegate {
             	self.timeSelected = false
             }
         case .Ended:
-        	let width = UIScreen.mainScreen().bounds.width
+        	let width = self.mainView.frame.width
         	var finalPos:CGFloat
             if self.timeSelected == true{
                 if (self.const.constant + 20) > -(width / 4){
@@ -69,7 +74,7 @@ class GestureDelegate: NSObject, UIGestureRecognizerDelegate {
                 let deltaY = gesture.locationInView(self.mainView).y - self.originPosition.y
                 self.xOrientation = abs(deltaX)>abs(deltaY)
             }
-            if self.xOrientation == true{
+            if self.xOrientation!{
                 if self.timeSelected == true{
                     if deltaX > 0{
                         self.const.constant = -20 + (deltaX/3)
@@ -77,7 +82,7 @@ class GestureDelegate: NSObject, UIGestureRecognizerDelegate {
                         self.const.constant = -20 + deltaX
                     }
                 }else{
-                    let width = UIScreen.mainScreen().bounds.width
+                    let width = self.mainView.frame.width
                     if deltaX < 0{
                         self.const.constant = -20 - width + (deltaX/3)
                     }else{
